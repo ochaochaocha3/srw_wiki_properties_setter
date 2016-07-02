@@ -1,18 +1,39 @@
 class CharacterPropertiesSetter
-  def self.simple_property_setter(label)
-    ->(value) { "[[#{label}::#{value}]]" }
+  # [[name::value]] 形式でプロパティを設定するセッターを返す
+  # @param [String] name プロパティ名
+  # @return [Proc]
+  def self.simple_property_setter(name)
+    ->(value) { "[[#{name}::#{value}]]" }
   end
 
-  def self.property_with_unit_setter(label)
+  # {{ name|value }} 形式でテンプレートを設定するセッターを返す
+  # @param [String] name テンプレート名
+  # @return [Proc]
+  def self.simple_template_setter(name)
+    ->(value) { "[[#{name}::#{value}]]" }
+  end
+
+  # 単位付きプロパティを設定するセッターを返す
+  # @param [String] name プロパティ名
+  # @return [Proc]
+  def self.property_with_unit_setter(name)
     lambda { |value|
-      value.gsub(/(\d+)\s*(\w+)/) { "[[#{label}::#{$1} #{$2}]]" }
+      value.gsub(/(\d+)\s*(\w+)/) { "[[#{name}::#{$1} #{$2}]]" }
+    }
+  end
+
+  # リンクを置換するセッターを返す
+  # @param [String] format 書式。%s を 1 つ入れること
+  # @return [Proc]
+  def self.link_replacer(format)
+    lambda { |value|
+      value.gsub(/\[\[(.+?)\]\]/) { format % $1 }
     }
   end
 
   TEMPLATE_SETTER = {
-    '声優' => lambda { |value|
-      "{{声優|#{value}}}"
-    },
+    '外国語表記' => simple_property_setter('外国語表記'),
+    '声優' => simple_template_setter('声優'),
     '種族' => simple_property_setter('種族'),
     '性別' => simple_property_setter('性別'),
     '年齢' => lambda { |value|
@@ -23,15 +44,11 @@ class CharacterPropertiesSetter
     '血液型' => lambda { |value|
       value.gsub(/(.+?)型/) { "[[血液型::#{$1}]]型" }
     },
-    '所属' => lambda { |value|
-      value.gsub(/\[\[(.+?)\]\]/) { "{{所属 (人物)|#{$1}}}" }
-    },
+    '所属' => link_replacer('{{所属 (人物)|%s}}'),
     '階級' => simple_property_setter('階級'),
     '役職' => simple_property_setter('役職'),
     '称号' => simple_property_setter('称号'),
-    '主な搭乗機' => lambda { |value|
-      value.gsub(/\[\[(.+?)\]\]/) { "[[搭乗機::#{$1}]]" }
-    }
+    '主な搭乗機' => link_replacer('[[搭乗機::%s]]')
   }
 
   def execute
