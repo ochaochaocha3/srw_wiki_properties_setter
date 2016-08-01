@@ -10,7 +10,7 @@ class CharacterPropertiesSetter
   # @param [String] name テンプレート名
   # @return [Proc]
   def self.simple_template_setter(name)
-    ->(value) { "[[#{name}::#{value}]]" }
+    ->(value) { "{{#{name}|#{value}}}" }
   end
 
   # 単位付きプロパティを設定するセッターを返す
@@ -34,7 +34,9 @@ class CharacterPropertiesSetter
   TEMPLATE_SETTER = {
     '外国語表記' => simple_property_setter('外国語表記'),
     '声優' => simple_template_setter('声優'),
-    '種族' => simple_property_setter('種族'),
+    '種族' => lambda { |value|
+      value.gsub(%r!([^()（）、,/\s]+)!) { "[[種族::#{$1}]]" }
+    },
     '性別' => simple_property_setter('性別'),
     '年齢' => lambda { |value|
       value.gsub(/(\d+)歳/) { "[[年齢::#{$1}]]歳" }
@@ -48,7 +50,8 @@ class CharacterPropertiesSetter
     '階級' => simple_property_setter('階級'),
     '役職' => simple_property_setter('役職'),
     '称号' => simple_property_setter('称号'),
-    '主な搭乗機' => link_replacer('[[搭乗機::%s]]')
+    '主な搭乗機' => link_replacer('[[搭乗機::%s]]'),
+    'キャラクターデザイン' => simple_template_setter('キャラクターデザイン')
   }
 
   def execute
