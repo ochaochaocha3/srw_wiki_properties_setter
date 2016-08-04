@@ -22,16 +22,14 @@ module SrwWiki
       '性別' => simple_property_setter('性別'),
       '年齢' => lambda {
         _setter = lambda { |value, is_next_list_item|
-          [value.gsub(/(\d+)歳/) { "[[年齢::#{$1}]]歳" },
-           is_next_list_item ? _setter : nil]
+          [value.gsub(/(\d+)歳/) { "[[年齢::#{$1}]]歳" }, _setter]
         }
       }.call,
       '身長' => property_with_unit_setter('身長'),
       '体重' => property_with_unit_setter('体重'),
       '血液型' => lambda {
         _setter = lambda { |value, is_next_list_item|
-          [value.gsub(/(.+?)型/) { "[[血液型::#{$1}]]型" },
-           is_next_list_item ? _setter : nil]
+          [value.gsub(/(.+?)型/) { "[[血液型::#{$1}]]型" }, _setter]
         }
       }.call,
       '所属' => lambda { |value, is_next_list_item|
