@@ -11,7 +11,7 @@ module SrwWiki
 
           until ss.eos?
             case
-            when ss.scan(%r![^&＆()（）+,，、.．。・/／:：;；<>＜＞\[\]［］【】{}｛｝]+!)
+            when ss.scan(%r![^&＆()（）+,，、.．。・/／:：;；<>＜＞\[\]［］【】{}｛｝←→⇐⇒]+!)
               result << format % [name, ss[0]]
             when ss.scan(/\(.+?\)|（.+?）|<.+?>|＜.+?＞|\[.+?\]|［.+?］|【.+?】|\{.+?\}|｛.+?｝/)
               result << ss[0]
