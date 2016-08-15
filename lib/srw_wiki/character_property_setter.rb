@@ -47,31 +47,8 @@ module SrwWiki
       '役職' => simple_property_setter('役職'),
       '称号' => simple_property_setter('称号'),
       '主な搭乗機' => link_to_property('搭乗機'),
-      'キャラクターデザイン' => simple_template_setter('キャラクターデザイン')
+      'キャラクターデザイン' => simple_template_setter('キャラクターデザイン'),
+      'メカニックデザイン' => simple_template_setter('メカニックデザイン')
     }
-
-    def self.execute(source)
-      lines = Line.from_lines(source.lines.map(&:chomp))
-
-      list_setter = nil
-      modified_lines = lines.map do |line|
-        case
-        when line.summary?
-          label_without_link = remove_link(line.label)
-
-          if setter = TEMPLATE_SETTER[label_without_link]
-            modified, list_setter = setter[line.value, line.is_next_list_item?]
-            "*#{line.label}：#{modified}"
-          else
-            line.content
-          end
-        when line.list_item?
-          modified, _ = list_setter[line.value, line.is_next_list_item?]
-          "**#{modified}"
-        end
-      end
-
-      modified_lines.join("\n")
-    end
   end
 end

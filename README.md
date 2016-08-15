@@ -5,7 +5,7 @@
 各スクリプトは標準入力から概要の箇条書き部分を受け取り、マッチした項目にSemantic MediaWikiプロパティを設定します。
 
 * character.rb：登場人物用
-* mechanic.rb：登場メカ用（製作予定）
+* mechanic.rb：登場メカ用
 
 # ライセンス
 MIT License

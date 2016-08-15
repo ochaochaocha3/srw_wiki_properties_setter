@@ -127,5 +127,10 @@ EOS
       assert_equal('*キャラクターデザイン：{{キャラクターデザイン|デザイナー}}',
                    CharacterPropertySetter.execute('*キャラクターデザイン：デザイナー'))
     end
+
+    test 'メカニックデザイン' do
+      assert_equal('*メカニックデザイン：{{メカニックデザイン|デザイナー}}',
+                   CharacterPropertySetter.execute('*メカニックデザイン：デザイナー'))
+    end
   end
 end
