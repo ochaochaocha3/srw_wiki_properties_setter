@@ -99,6 +99,8 @@ module SrwWiki
         when line.list_item?
           modified, _ = list_setter[line.value, line.is_next_list_item?]
           "**#{modified}"
+        else
+          line.content
         end
       end
 

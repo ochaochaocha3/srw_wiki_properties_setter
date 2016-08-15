@@ -1,7 +1,7 @@
 module SrwWiki
   class Line
     SUMMARY_PATTERN = /\A\*\s*([^*].*)/
-    LIST_ITEM_PATTERN = /\A\*{2}\s*([^*].*)/
+    LIST_ITEM_PATTERN = /\A\*{2,}\s*([^*].*)/
 
     def self.from_lines(lines)
       next_lines = lines.drop(1)
