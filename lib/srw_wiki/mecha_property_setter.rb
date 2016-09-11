@@ -47,5 +47,9 @@ module SrwWiki
       'キャラクターデザイン' => simple_template_setter('キャラクターデザイン'),
       'メカニックデザイン' => simple_template_setter('メカニックデザイン')
     }
+
+    def self.execute(source)
+      super(source, '登場メカ概要')
+    end
   end
 end

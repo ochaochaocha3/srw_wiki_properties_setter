@@ -5,6 +5,7 @@ require 'srw_wiki/line'
 module SrwWiki
   class CharacterPropertySetter < PropertySetter
     TEMPLATE_SETTER = {
+      '読み' => simple_property_setter('読み'),
       '外国語表記' => simple_property_setter('外国語表記'),
       '登場作品' => lambda { |value, is_next_list_item|
         if is_next_list_item
@@ -18,6 +19,10 @@ module SrwWiki
         end
       },
       '声優' => simple_template_setter('声優'),
+      '本名' => simple_property_setter('本名'),
+      '別名' => simple_property_setter('別名'),
+      '異名' => simple_property_setter('異名'),
+      '愛称' => simple_property_setter('愛称'),
       '種族' => simple_property_setter('種族'),
       '性別' => simple_property_setter('性別'),
       '年齢' => lambda {
@@ -50,5 +55,9 @@ module SrwWiki
       'キャラクターデザイン' => simple_template_setter('キャラクターデザイン'),
       'メカニックデザイン' => simple_template_setter('メカニックデザイン')
     }
+
+    def self.execute(source)
+      super(source, '登場人物概要')
+    end
   end
 end

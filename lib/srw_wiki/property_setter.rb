@@ -11,7 +11,7 @@ module SrwWiki
 
           until ss.eos?
             case
-            when ss.scan(%r![^&＆()（）+,，、.．。・/／:：;；<>＜＞\[\]［］【】{}｛｝←→⇐⇒]+!)
+            when ss.scan(%r![^&＆()（）+,，、.．。/／:：;；<>＜＞\[\]［］【】{}｛｝←→⇐⇒]+!)
               result << format % [name, ss[0]]
             when ss.scan(/\(.+?\)|（.+?）|<.+?>|＜.+?＞|\[.+?\]|［.+?］|【.+?】|\{.+?\}|｛.+?｝/)
               result << ss[0]
@@ -81,30 +81,30 @@ module SrwWiki
       link_elements.last
     end
 
-    def self.execute(source)
+    def self.execute(source, template)
       lines = Line.from_lines(source.lines.map(&:chomp))
 
       list_setter = nil
-      modified_lines = lines.map do |line|
+      modified_lines = lines.map { |line|
         case
         when line.summary?
           label_without_link = remove_link(line.label)
 
           if setter = self::TEMPLATE_SETTER[label_without_link]
             modified, list_setter = setter[line.value, line.is_next_list_item?]
-            "*#{line.label}：#{modified}"
+            "| #{label_without_link} = #{modified}"
           else
             line.content
           end
         when line.list_item?
           modified, _ = list_setter[line.value, line.is_next_list_item?]
-          "**#{modified}"
+          "*#{modified}"
         else
           line.content
         end
-      end
+      }
 
-      modified_lines.join("\n")
+      (["{{#{template}"] + modified_lines + ['}}']).join("\n")
     end
   end
 end
