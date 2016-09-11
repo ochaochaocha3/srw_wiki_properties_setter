@@ -37,6 +37,7 @@ module SrwWiki
           [value.gsub(/(.+?)型/) { "[[血液型::#{$1}]]型" }, _setter]
         }
       }.call,
+      '出身' => simple_property_setter('出身'),
       '所属' => lambda { |value, is_next_list_item|
         if is_next_list_item
           list_item_setter = lambda { |value_li, is_next_list_item_li|
