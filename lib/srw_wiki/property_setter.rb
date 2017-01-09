@@ -3,9 +3,15 @@ require 'stringio'
 
 module SrwWiki
   class PropertySetter
+    def self.identity
+      lambda {
+        _identity = ->(value, _) { [value, _identity] }
+      }.call
+    end
+
     def self.simple_setter(name, format)
       lambda {
-        _simple_setter = lambda { |value, is_next_list_item|
+        _simple_setter = lambda { |value, _|
           ss = StringScanner.new(value)
           result = ''
 
@@ -44,7 +50,7 @@ module SrwWiki
     # @return [Proc]
     def self.property_with_unit_setter(name)
       lambda {
-        _property_with_unit_setter = lambda { |value, is_next_list_item|
+        _property_with_unit_setter = lambda { |value, _|
           [value.gsub(/([\d.]+)\s*([\wぁ-んァ-ヶ]+)/) { "[[#{name}::#{$1} #{$2}]]" },
            _property_with_unit_setter]
         }
@@ -56,7 +62,7 @@ module SrwWiki
     # @return [Proc]
     def self.link_replacer(format)
       lambda {
-        _link_replacer = lambda { |value, is_next_list_item|
+        _link_replacer = lambda { |value, _|
           [value.gsub(/\[\[(.+?)\]\]/) { format % $1 },  _link_replacer]
         }
       }.call
