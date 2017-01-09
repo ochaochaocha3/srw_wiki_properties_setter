@@ -6,6 +6,7 @@ module SrwWiki
   class CharacterPropertySetter < PropertySetter
     TEMPLATE_SETTER = {
       '読み' => simple_property_setter('読み'),
+      '漢字表記' => simple_property_setter('漢字表記'),
       '外国語表記' => simple_property_setter('外国語表記'),
       '登場作品' => lambda { |value, is_next_list_item|
         if is_next_list_item
@@ -25,6 +26,8 @@ module SrwWiki
       '愛称' => simple_property_setter('愛称'),
       '種族' => simple_property_setter('種族'),
       '性別' => simple_property_setter('性別'),
+      '生年月日' => identity,
+      '誕生日' => identity,
       '年齢' => lambda {
         _setter = lambda { |value, is_next_list_item|
           [value.gsub(/(\d+)歳/) { "[[年齢::#{$1}]]歳" }, _setter]
@@ -49,9 +52,12 @@ module SrwWiki
           link_to_template('所属 (人物)')[value, is_next_list_item]
         end
       },
+      '最終学歴' => identity,
       '階級' => simple_property_setter('階級'),
       '役職' => simple_property_setter('役職'),
       '称号' => simple_property_setter('称号'),
+      'コールサイン' => simple_property_setter('コールサイン'),
+      '搭乗機' => link_to_property('搭乗機'),
       '主な搭乗機' => link_to_property('搭乗機'),
       'キャラクターデザイン' => simple_template_setter('キャラクターデザイン'),
       'メカニックデザイン' => simple_template_setter('メカニックデザイン')
