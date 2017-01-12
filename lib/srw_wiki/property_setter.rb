@@ -98,7 +98,7 @@ module SrwWiki
 
           if setter = self::TEMPLATE_SETTER[label_without_link]
             modified, list_setter = setter[line.value, line.is_next_list_item?]
-            "| #{label_without_link} = #{modified}"
+            "| #{label_without_link} = #{modified}".rstrip
           else
             line.content
           end
